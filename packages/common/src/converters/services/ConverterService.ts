@@ -60,6 +60,10 @@ export class ConverterService {
    * @param options
    */
   serialize(obj: any, options: IConverterOptions = {}): any {
+    if (options.convertUndefinedToNull === true && obj === undefined) {
+      return null;
+    }
+
     if (isEmpty(obj)) {
       return obj;
     }
@@ -98,7 +102,7 @@ export class ConverterService {
    * @returns {any}
    */
   serializeClass(obj: any, options: IConverterOptions = {}) {
-    const {checkRequiredValue = true, withIgnoredProps} = options;
+    const {checkRequiredValue = true, withIgnoredProps, convertUndefinedToNull} = options;
 
     const plainObject: any = {};
     const properties = PropertyRegistry.getProperties(options.type || obj, {withIgnoredProps});
@@ -108,11 +112,13 @@ export class ConverterService {
       if (typeof obj[propertyKey] !== "function") {
         let propertyMetadata = ConverterService.getPropertyMetadata(properties, propertyKey);
         let propertyValue = obj[propertyKey];
+
         propertyMetadata = propertyMetadata || ({} as any);
 
         propertyValue = this.serialize(propertyValue, {
           checkRequiredValue,
           withIgnoredProps,
+          convertUndefinedToNull,
           type: propertyMetadata!.type
         });
 

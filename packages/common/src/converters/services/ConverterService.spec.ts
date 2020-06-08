@@ -6,6 +6,7 @@ import {JsonFoo, JsonFoo1, JsonFoo2, JsonFoo3, JsonFoo4} from "../../../../../te
 import {ConverterService, ModelStrict} from "../../../src/converters";
 import {Default, PropertyDeserialize, PropertySerialize, PropertyType} from "../../../src/jsonschema/decorators";
 import {Property} from "../../../src/jsonschema/decorators/property";
+import {Type} from "@tsed/core/src";
 
 class JsonFoo5 {
   @Property()
@@ -710,6 +711,49 @@ describe("ConverterService", () => {
         // @ts-ignore
         const result = converterService.getAdditionalPropertiesLevel(Test);
         expect(result).to.equals("accept");
+      })
+    );
+
+    it(
+      "should serialize with null values",
+      PlatformTest.inject([ConverterService], (converterService: ConverterService) => {
+        // WHEN
+        const foo2 = converterService.deserialize(
+          {
+            test: "testField",
+            Name: "nameField",
+            dateStart: new Date().toISOString(),
+            object: {test: "2ez"},
+            foo: {
+              test: "2"
+            },
+            foos: [
+              {
+                test: "1"
+              },
+              {
+                test: "2"
+              }
+            ],
+            foos2: {
+              test: "15"
+            },
+            theMap: {
+              f1: {test: "1"}
+            },
+            theSet: [{test: "13"}, {test: "1re"}]
+          },
+          JsonFoo2
+        );
+
+        // THEN
+        const foo2serialized: JsonFoo2 = converterService.serialize(foo2, {
+          type: JsonFoo2,
+          convertUndefinedToNull: true
+        });
+        expect(foo2serialized).to.be.instanceof(Object);
+
+        expect(foo2serialized.ageModel).to.be.null;
       })
     );
   });

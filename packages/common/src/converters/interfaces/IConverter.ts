@@ -26,6 +26,7 @@ export interface IConverterOptions extends IMetadataType {
   checkRequiredValue?: boolean;
   withIgnoredProps?: boolean;
   additionalProperties?: "error" | "ignore" | "accept";
+  convertUndefinedToNull?: boolean;
 }
 
 /**
