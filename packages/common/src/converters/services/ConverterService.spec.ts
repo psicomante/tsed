@@ -1,9 +1,9 @@
-import {PlatformTest} from "@tsed/common";
+import {AdditionalProperties, PlatformTest} from "@tsed/common";
 import {InjectorService} from "@tsed/di";
 import {Configuration} from "@tsed/di/src/decorators/configuration";
 import {assert, expect} from "chai";
 import {JsonFoo, JsonFoo1, JsonFoo2, JsonFoo3, JsonFoo4} from "../../../../../test/helper/classes";
-import {ConverterService, ModelStrict} from "../../../src/converters";
+import {ConverterService} from "../../../src/converters";
 import {Default, PropertyDeserialize, PropertySerialize, PropertyType} from "../../../src/jsonschema/decorators";
 import {Property} from "../../../src/jsonschema/decorators/property";
 
@@ -200,63 +200,6 @@ describe("ConverterService", () => {
         assert.throws(() => converterService.deserialize("NK1", Number), "Cast error. Expression value is not a number.");
       })
     );
-
-    describe("validationModelStrict options", () => {
-      it(
-        "should emit a BadRequest error when a property is not in the Model",
-        PlatformTest.inject([Configuration], async (configuration: Configuration) => {
-          // GIVEN
-          const converterService = await invokeConverterService({
-            validationModelStrict: true,
-            configuration
-          });
-
-          // WHEN
-          let actualError;
-          try {
-            converterService.deserialize(
-              {
-                test: 1,
-                foo: "test",
-                notPropertyAllowed: "tst"
-              },
-              JsonFoo4 as any
-            );
-          } catch (er) {
-            actualError = er;
-          }
-
-          expect(actualError.message).to.equal("Property notPropertyAllowed on class JsonFoo4 is not allowed.");
-        })
-      );
-      it(
-        "should deserialize model",
-        PlatformTest.inject([Configuration], async (configuration: Configuration) => {
-          // GIVEN
-          const converterService = await invokeConverterService({
-            validationModelStrict: false,
-            configuration
-          });
-
-          // WHEN
-          const result = converterService.deserialize(
-            {
-              test: 1,
-              foo: "test",
-              notPropertyAllowed: "tst"
-            },
-            JsonFoo5 as any
-          );
-          // THEN
-          expect(result).to.be.instanceof(JsonFoo5);
-          expect(result).to.deep.equal({
-            foo: "test",
-            notPropertyAllowed: "tst",
-            test: 1
-          });
-        })
-      );
-    });
 
     describe("converter.additionalProperties options", () => {
       it(
@@ -606,38 +549,11 @@ describe("ConverterService", () => {
       "should return accept when there is no model",
       PlatformTest.inject([Configuration], async (configuration: Configuration) => {
         const converterService = await invokeConverterService({
-          validationModelStrict: true,
           configuration
         });
 
         // @ts-ignore
         const result = converterService.getAdditionalPropertiesLevel(Object);
-        expect(result).to.equals("accept");
-      })
-    );
-    it(
-      "should return error when validationModelStrict = true",
-      PlatformTest.inject([Configuration], async (configuration: Configuration) => {
-        const converterService = await invokeConverterService({
-          validationModelStrict: true,
-          configuration
-        });
-
-        // @ts-ignore
-        const result = converterService.getAdditionalPropertiesLevel(Test);
-        expect(result).to.equals("error");
-      })
-    );
-    it(
-      "should return accept when validationModelStrict = false",
-      PlatformTest.inject([Configuration], async (configuration: Configuration) => {
-        const converterService = await invokeConverterService({
-          validationModelStrict: false,
-          configuration
-        });
-
-        // @ts-ignore
-        const result = converterService.getAdditionalPropertiesLevel(Test);
         expect(result).to.equals("accept");
       })
     );
@@ -681,9 +597,9 @@ describe("ConverterService", () => {
       })
     );
     it(
-      "should return return return error when model is strict and global is acccept",
+      "should return error when decorator is true",
       PlatformTest.inject([Configuration], async (configuration: Configuration) => {
-        @ModelStrict(true)
+        @AdditionalProperties(false)
         class Test {}
 
         const converterService = await invokeConverterService({
@@ -697,9 +613,9 @@ describe("ConverterService", () => {
       })
     );
     it(
-      "should return return return error when model is strict and global is acccept",
+      "should return have accept when decorator is set to false",
       PlatformTest.inject([Configuration], async (configuration: Configuration) => {
-        @ModelStrict(false)
+        @AdditionalProperties(true)
         class Test {}
 
         const converterService = await invokeConverterService({
@@ -715,16 +631,12 @@ describe("ConverterService", () => {
   });
 });
 
-async function invokeConverterService({validationModelStrict = true, additionalProperties, configuration}: any) {
+async function invokeConverterService({additionalProperties, configuration}: any) {
   return PlatformTest.invoke<ConverterService>(ConverterService, [
     {
       token: Configuration,
       use: {
         get(key: string) {
-          if (key === "validationModelStrict") {
-            return validationModelStrict;
-          }
-
           if (key === "converter") {
             return {
               additionalProperties
