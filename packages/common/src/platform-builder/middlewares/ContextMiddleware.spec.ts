@@ -27,8 +27,6 @@ describe("contextMiddleware", () => {
     // THEN
     injector.emit.should.have.been.calledWithExactly("$onRequest", request, response);
     // injector.emit.should.have.been.calledWithExactly("$onResponse", request, response);
-
-    request.log.id.should.deep.equal(request.ctx.id);
   });
 
   it("should create context and attach it to the request with reqIdBuilder", async () => {

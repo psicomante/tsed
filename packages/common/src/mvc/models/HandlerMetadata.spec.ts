@@ -30,7 +30,6 @@ describe("HandlerMetadata", () => {
       handlerMetadata.type.should.eq(HandlerType.FUNCTION);
       handlerMetadata.hasNextFunction.should.eq(true);
       handlerMetadata.hasErrorParam.should.eq(false);
-      expect(handlerMetadata.method).to.eq(undefined);
     });
   });
 
