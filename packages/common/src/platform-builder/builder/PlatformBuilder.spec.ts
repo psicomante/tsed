@@ -41,10 +41,6 @@ describe("PlatformBuilder", () => {
     }
   })
   class ServerModule implements BeforeInit, AfterInit, BeforeRoutesInit, AfterRoutesInit, BeforeListen, AfterListen, OnReady {
-    $onInit(): Promise<any> | void {
-      return undefined;
-    }
-
     $beforeRoutesInit(): void | Promise<any> {
       return undefined;
     }
@@ -75,7 +71,6 @@ describe("PlatformBuilder", () => {
   }
 
   beforeEach(() => {
-    sandbox.stub(ServerModule.prototype, "$onInit");
     sandbox.stub(ServerModule.prototype, "$beforeRoutesInit");
     sandbox.stub(ServerModule.prototype, "$afterRoutesInit");
     sandbox.stub(ServerModule.prototype, "$afterInit");
@@ -102,7 +97,6 @@ describe("PlatformBuilder", () => {
       });
 
       // THEN
-      server.rootModule.$onInit.should.have.been.calledWithExactly();
       server.rootModule.$beforeRoutesInit.should.have.been.calledWithExactly();
       server.rootModule.$afterRoutesInit.should.have.been.calledWithExactly();
       server.rootModule.$afterInit.should.have.been.calledWithExactly();
@@ -110,7 +104,6 @@ describe("PlatformBuilder", () => {
       server.injector.emit.should.have.been.calledWithExactly("$beforeRoutesInit");
       server.injector.emit.should.have.been.calledWithExactly("$afterRoutesInit");
       server.injector.emit.should.not.have.been.calledWithExactly("$afterInit");
-      server.injector.emit.should.not.have.been.calledWithExactly("$onInit");
       server.injector.emit.should.not.have.been.calledWithExactly("$beforeInit");
 
       await server.listen();

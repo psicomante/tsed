@@ -1,7 +1,6 @@
-import {Env, isInheritedFrom, Type} from "@tsed/core";
+import {Env, Type} from "@tsed/core";
 import {InjectorService, LocalsContainer, OnInit, TokenProvider} from "@tsed/di";
 import {createInjector, loadInjector, PlatformBuilder} from "../../platform-builder";
-import {ServerLoader} from "../../platform-express/components/ServerLoader";
 import {IRequestContextOptions, RequestContext} from "../../platform/domain/RequestContext";
 import {PlatformApplication} from "../../platform/services/PlatformApplication";
 
@@ -58,22 +57,13 @@ export class PlatformTest {
     return async function before(): Promise<void> {
       let instance: any;
 
-      if (isInheritedFrom(mod, ServerLoader)) {
-        instance = await ServerLoader.bootstrap(mod, {
-          logger: {
-            level: "off"
-          },
-          ...options
-        });
-      } else {
-        // @ts-ignore
-        instance = await PlatformBuilder.build(PlatformTest.platformBuilder).bootstrap(mod, {
-          logger: {
-            level: "off"
-          },
-          ...options
-        });
-      }
+      // @ts-ignore
+      instance = await PlatformBuilder.build(PlatformTest.platformBuilder).bootstrap(mod, {
+        logger: {
+          level: "off"
+        },
+        ...options
+      });
 
       await instance.callHook("$beforeListen");
       await instance.callHook("$afterListen");
