@@ -15,9 +15,6 @@ This schemes resume the order of hooks regarding to ServerLoader and Providers:
 ### Examples
 
 Hooks can be used on your Server:
-
-<Tabs class="-code">
-  <Tab label="v5.56.0+">
   
 ```typescript
 import {BeforeInit, Configuration} from "@tsed/common";
@@ -29,23 +26,6 @@ class Server implements BeforeInit {
   }
 }
 ```
-
-  </Tab>
-  <Tab label="Legacy">
-
-```typescript
-import {ServerLoader, ServerSettings, BeforeInit} from "@tsed/common";
-
-@ServerSettings({})
-export class Server extends ServerLoader implements BeforeInit {
-  async $beforeInit(): Promise<any>  {
-    
-  }
-}
-```
-  
-  </Tab>
-</Tabs>  
 
 or on your @@Module@@ or @@Service@@:
 

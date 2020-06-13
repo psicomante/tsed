@@ -29,7 +29,6 @@
     "@tsed/platform-express": "5.57.6",
     "@tsed/exceptions": "5.57.6",
     "@tsed/swagger": "5.57.6",
-    "@tsed/testing": "5.57.6",
     "@tsed/typeorm": "5.57.6",
     "@tsed/passport": "5.57.6",
     "@types/swagger-schema-official": "2.0.20",
