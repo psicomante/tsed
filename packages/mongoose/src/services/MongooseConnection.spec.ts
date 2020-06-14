@@ -69,36 +69,4 @@ describe("MongooseConnections", () => {
     // THEN
     connectStub.should.have.been.calledWithExactly("id", "mongodb://test", {options: "options"}, true);
   });
-  it("should init connection with urls", async () => {
-    // GIVEN
-    const connectStub = sandbox.stub().resolves("test");
-
-    // WHEN
-    await PlatformTest.invoke(MONGOOSE_CONNECTIONS, [
-      {
-        token: Configuration,
-        use: {
-          get() {
-            return {
-              urls: {
-                db1: {
-                  url: "mongodb://test",
-                  connectionOptions: {options: "options"}
-                }
-              }
-            };
-          }
-        }
-      },
-      {
-        token: MongooseService,
-        use: {
-          connect: connectStub
-        }
-      }
-    ]);
-
-    // THEN
-    connectStub.should.have.been.calledWithExactly("db1", "mongodb://test", {options: "options"}, true);
-  });
 });
