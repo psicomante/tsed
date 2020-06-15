@@ -1,6 +1,6 @@
+import {ServerSettingsService} from "@tsed/common";
 import {assert, expect} from "chai";
-import {FakeRequest} from "../../../../../test/helper";
-import {ServerSettingsService} from "../../config";
+import {FakeRequest} from "../../../../test/helper";
 import {GlobalAcceptMimesMiddleware} from "./GlobalAcceptMimesMiddleware";
 
 describe("GlobalAcceptMimesMiddleware", () => {

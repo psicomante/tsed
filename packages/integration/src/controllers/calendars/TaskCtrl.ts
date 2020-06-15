@@ -1,5 +1,6 @@
-import {Controller, Get, MergeParams, PathParams, QueryParams, UseBefore} from "@tsed/common";
-import {Hidden} from "../../../../../packages/swagger/src";
+import {Controller, Get, PathParams, QueryParams, UseBefore} from "@tsed/common";
+import {MergeParams} from "@tsed/platform-express";
+import {Hidden} from "@tsed/swagger";
 import {Test2Middleware} from "../../middlewares/middleware";
 
 @Controller("/:eventId/tasks")

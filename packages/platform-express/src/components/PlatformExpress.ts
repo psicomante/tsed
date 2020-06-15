@@ -1,8 +1,7 @@
-import {IRoute, PlatformBuilder} from "@tsed/common";
+import {createHttpServer, createHttpsServer, IRoute, PlatformBuilder} from "@tsed/common";
 import {Type} from "@tsed/core";
 import {GlobalAcceptMimesMiddleware, GlobalErrorHandlerMiddleware, LogIncomingRequestMiddleware} from "../middlewares";
 import {PlatformExpressStatics} from "../services";
-import {createHttpServer, createHttpsServer} from "../utils";
 
 export class PlatformExpress extends PlatformBuilder {
   static async bootstrap(module: Type<any>, settings: Partial<TsED.Configuration> = {}): Promise<PlatformExpress> {
